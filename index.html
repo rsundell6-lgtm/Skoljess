@@ -2,143 +2,170 @@
 <html lang="sv">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Skoljess</title>
 
 <style>
-*{box-sizing:border-box}
-
-body{
-    margin:0;
-    padding:15px;
-    background:#0e1013;
-    color:#fff;
-    font-family:Arial,sans-serif;
+* {
+    box-sizing: border-box;
 }
 
-h1{
-    text-align:center;
-    margin:10px 0 20px;
+body {
+    margin: 0;
+    padding: 15px;
+    background: #0e1013;
+    color: #fff;
+    font-family: Arial, sans-serif;
 }
 
-h2{margin-top:0}
-
-.card{
-    background:#191c21;
-    border-radius:15px;
-    padding:15px;
-    margin-bottom:15px;
+h1 {
+    text-align: center;
+    margin: 10px 0 20px;
 }
 
-textarea{
-    width:100%;
-    min-height:220px;
-    background:#252930;
-    color:#fff;
-    border:1px solid #3a3f48;
-    border-radius:10px;
-    padding:12px;
-    font-size:16px;
-    resize:vertical;
+h2 {
+    margin-top: 0;
 }
 
-button{
-    width:100%;
-    border:0;
-    border-radius:10px;
-    padding:14px;
-    margin-top:10px;
-    background:#3478f6;
-    color:#fff;
-    font-size:16px;
-    font-weight:bold;
+.card {
+    background: #191c21;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 15px;
 }
 
-button.danger{background:#8b3030}
-button.secondary{background:#30343b}
-
-.event{
-    background:#252930;
-    border-radius:12px;
-    padding:14px;
-    margin-top:10px;
-    border-left:4px solid #3478f6;
+textarea {
+    width: 100%;
+    min-height: 220px;
+    background: #252930;
+    color: #fff;
+    border: 1px solid #3a3f48;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 16px;
+    resize: vertical;
 }
 
-.date{
-    color:#79a6ff;
-    font-weight:bold;
-    font-size:17px;
+button {
+    width: 100%;
+    border: 0;
+    border-radius: 10px;
+    padding: 14px;
+    margin-top: 10px;
+    background: #3478f6;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
 }
 
-.title{
-    font-size:18px;
-    font-weight:bold;
-    margin-top:7px;
+button.danger {
+    background: #8b3030;
 }
 
-.time{
-    font-size:17px;
-    font-weight:bold;
-    margin-top:7px;
+button.secondary {
+    background: #30343b;
 }
 
-.info{
-    color:#aaa;
-    margin-top:7px;
-    line-height:1.5;
-    white-space:pre-wrap;
+.event {
+    background: #252930;
+    border-radius: 12px;
+    padding: 14px;
+    margin-top: 10px;
+    border-left: 4px solid #3478f6;
 }
 
-.original{
-    color:#777;
-    font-size:13px;
-    margin-top:10px;
+.date {
+    color: #79a6ff;
+    font-weight: bold;
+    font-size: 17px;
 }
 
-.check{
-    float:right;
+.title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 7px;
 }
 
-.check input{
-    width:23px;
-    height:23px;
+.time {
+    font-size: 17px;
+    font-weight: bold;
+    margin-top: 7px;
 }
 
-.edit{
-    width:100%;
-    background:#30343b;
-    color:#fff;
-    border:1px solid #454a53;
-    border-radius:8px;
-    padding:10px;
-    margin-top:8px;
-    font-size:15px;
+.info {
+    color: #aaa;
+    margin-top: 7px;
+    line-height: 1.5;
+    white-space: pre-wrap;
 }
 
-textarea.edit{min-height:100px}
-
-.hidden{display:none}
-
-.empty{
-    color:#777;
-    text-align:center;
-    padding:20px;
+.original {
+    color: #777;
+    font-size: 13px;
+    margin-top: 10px;
 }
 
-.status{
-    text-align:center;
-    color:#777;
-    font-size:13px;
-    margin-bottom:10px;
+.check {
+    float: right;
 }
 
-.loading{
-    text-align:center;
-    padding:20px;
-    color:#aaa;
+.check input {
+    width: 23px;
+    height: 23px;
 }
+
+.edit {
+    width: 100%;
+    background: #30343b;
+    color: #fff;
+    border: 1px solid #454a53;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 8px;
+    font-size: 15px;
+}
+
+textarea.edit {
+    min-height: 100px;
+}
+
+.hidden {
+    display: none;
+}
+
+.empty {
+    color: #777;
+    text-align: center;
+    padding: 20px;
+}
+
+.status {
+    text-align: center;
+    color: #aaa;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.error {
+    background: #421f1f;
+    border: 1px solid #8b3030;
+    color: #ffb0b0;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    white-space: pre-wrap;
+}
+
+.success {
+    background: #1d3b25;
+    border: 1px solid #39734a;
+    color: #a8e6b8;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
 </style>
 </head>
 
@@ -146,14 +173,14 @@ textarea.edit{min-height:100px}
 
 <h1>Jessii Koll</h1>
 
+<div id="message"></div>
+
 <div class="status" id="status">
 Ansluter till Skoljess...
 </div>
 
 
-<!-- ADMINDEL -->
-
-<div class="card" id="adminCard">
+<div class="card">
 
 <h2>Skolmeddelande</h2>
 
@@ -168,8 +195,6 @@ Tolka meddelandet
 
 </div>
 
-
-<!-- FÖRHANDSVISNING -->
 
 <div class="card hidden" id="previewCard">
 
@@ -188,14 +213,14 @@ Avbryt
 </div>
 
 
-<!-- SPARADE -->
-
 <div class="card">
 
 <h2>Kommande</h2>
 
 <div id="events">
-<div class="loading">Hämtar schema...</div>
+<div class="empty">
+Hämtar schema...
+</div>
 </div>
 
 </div>
@@ -203,9 +228,9 @@ Avbryt
 
 <script type="module">
 
-/* ==================================================
+/* =====================================================
    FIREBASE
-================================================== */
+===================================================== */
 
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
@@ -216,9 +241,7 @@ import {
     addDoc,
     deleteDoc,
     doc,
-    onSnapshot,
-    query,
-    orderBy
+    onSnapshot
 }
 from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
@@ -248,111 +271,163 @@ const firebaseConfig = {
 };
 
 
-const app =
-initializeApp(firebaseConfig);
-
-const db =
-getFirestore(app);
+let app;
+let db;
+let eventsRef;
 
 
-/* ==================================================
+/* =====================================================
+   FELMEDDELANDE
+===================================================== */
+
+function showError(text) {
+
+    document.getElementById("message").innerHTML = `
+        <div class="error">${safe(text)}</div>
+    `;
+
+}
+
+
+function showSuccess(text) {
+
+    document.getElementById("message").innerHTML = `
+        <div class="success">${safe(text)}</div>
+    `;
+
+}
+
+
+/* =====================================================
+   INITIERA FIREBASE
+===================================================== */
+
+try {
+
+    app = initializeApp(firebaseConfig);
+
+    db = getFirestore(app);
+
+    eventsRef = collection(db, "events");
+
+    document.getElementById("status").textContent =
+        "Ansluten till Skoljess";
+
+}
+catch (error) {
+
+    console.error(error);
+
+    document.getElementById("status").textContent =
+        "Firebase kunde inte starta";
+
+    showError(
+        "Firebase-fel:\n" +
+        error.message
+    );
+
+}
+
+
+/* =====================================================
+   HÄMTA HÄNDELSER
+===================================================== */
+
+if (eventsRef) {
+
+    onSnapshot(
+
+        eventsRef,
+
+        function(snapshot) {
+
+            const loaded = [];
+
+            snapshot.forEach(function(item) {
+
+                loaded.push({
+
+                    id: item.id,
+
+                    ...item.data()
+
+                });
+
+            });
+
+
+            events = loaded;
+
+            sortEvents();
+
+            showEvents();
+
+            document.getElementById("status").textContent =
+                "Synkad med Firebase";
+
+        },
+
+        function(error) {
+
+            console.error(error);
+
+            document.getElementById("status").textContent =
+                "Fel vid hämtning";
+
+            showError(
+                "Kunde inte läsa schemat från Firebase.\n\n" +
+                error.code +
+                "\n" +
+                error.message
+            );
+
+        }
+
+    );
+
+}
+
+
+/* =====================================================
    DATA
-================================================== */
+===================================================== */
 
 let events = [];
 
 let detected = [];
 
 
-/* ==================================================
-   FIREBASE-LYSSNARE
-================================================== */
-
-const eventsRef =
-collection(db,"events");
-
-
-const eventsQuery =
-query(
-    eventsRef,
-    orderBy("year"),
-    orderBy("month"),
-    orderBy("day")
-);
-
-
-onSnapshot(
-    eventsQuery,
-
-    snapshot => {
-
-        events =
-        snapshot.docs.map(
-            item => ({
-
-                id:item.id,
-                ...item.data()
-
-            })
-        );
-
-        document
-        .getElementById("status")
-        .textContent =
-        "Synkad med Skoljess";
-
-        showEvents();
-
-    },
-
-    error => {
-
-        console.error(error);
-
-        document
-        .getElementById("status")
-        .textContent =
-        "Kunde inte ansluta till databasen";
-
-        document
-        .getElementById("events")
-        .innerHTML =
-        `<div class="empty">
-        Kunde inte hämta schemat.
-        </div>`;
-
-    }
-);
-
-
-/* ==================================================
+/* =====================================================
    MÅNADER
-================================================== */
+===================================================== */
 
 const months = {
 
-    januari:1,
-    februari:2,
-    mars:3,
-    april:4,
-    maj:5,
-    juni:6,
-    juli:7,
-    augusti:8,
-    september:9,
-    oktober:10,
-    november:11,
-    december:12
+    januari: 1,
+    februari: 2,
+    mars: 3,
+    april: 4,
+    maj: 5,
+    juni: 6,
+    juli: 7,
+    augusti: 8,
+    september: 9,
+    oktober: 10,
+    november: 11,
+    december: 12
 
 };
 
 
-function monthName(number){
+function monthName(number) {
 
-    for(const name in months){
+    for (const name in months) {
 
-        if(months[name] == number)
+        if (months[name] === number) {
+
             return name;
+
+        }
 
     }
 
@@ -361,92 +436,99 @@ function monthName(number){
 }
 
 
-/* ==================================================
+/* =====================================================
    ÅR
-================================================== */
+===================================================== */
 
-function getYear(month){
+function getYear(month) {
 
-    const now =
-    new Date();
+    const now = new Date();
 
-    let year =
-    now.getFullYear();
+    let year = now.getFullYear();
 
     const currentMonth =
-    now.getMonth()+1;
+        now.getMonth() + 1;
 
-    if(month < currentMonth-2)
+    if (month < currentMonth - 2) {
+
         year++;
+
+    }
 
     return year;
 
 }
 
 
-/* ==================================================
+/* =====================================================
    SKYDDA HTML
-================================================== */
+===================================================== */
 
-function safe(text){
+function safe(text) {
 
     return String(text || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
 }
 
 
-/* ==================================================
+/* =====================================================
    DATUM
-================================================== */
+===================================================== */
 
-function findDates(text){
+function findDates(text) {
 
-    const result=[];
+    const result = [];
 
     const regex =
-    /(\d{1,2})\s*(?:\/|-|\.)\s*(\d{1,2})|(\d{1,2})\s+(januari|februari|mars|april|maj|juni|juli|augusti|september|oktober|november|december)/gi;
+        /(\d{1,2})\s*(?:\/|-|\.)\s*(\d{1,2})|(\d{1,2})\s+(januari|februari|mars|april|maj|juni|juli|augusti|september|oktober|november|december)/gi;
 
     let match;
 
-    while((match=regex.exec(text)) !== null){
+    while ((match = regex.exec(text)) !== null) {
 
         let day;
         let month;
 
-        if(match[1]){
+        if (match[1]) {
 
-            day=parseInt(match[1]);
-            month=parseInt(match[2]);
+            day = parseInt(match[1]);
 
-        }else{
+            month = parseInt(match[2]);
 
-            day=parseInt(match[3]);
+        }
+        else {
 
-            month=
-            months[
-                match[4].toLowerCase()
-            ];
+            day = parseInt(match[3]);
+
+            month =
+                months[
+                    match[4].toLowerCase()
+                ];
 
         }
 
-        if(
-            day>=1 &&
-            day<=31 &&
-            month>=1 &&
-            month<=12
-        ){
+
+        if (
+            day >= 1 &&
+            day <= 31 &&
+            month >= 1 &&
+            month <= 12
+        ) {
 
             result.push({
 
-                day,
-                month,
-                year:getYear(month),
-                index:match.index
+                day: day,
+
+                month: month,
+
+                year: getYear(month),
+
+                index: match.index
 
             });
 
@@ -459,29 +541,29 @@ function findDates(text){
 }
 
 
-/* ==================================================
+/* =====================================================
    TIDER
-================================================== */
+===================================================== */
 
-function findTimes(text){
+function findTimes(text) {
 
-    const result=[];
+    const result = [];
 
     const regex =
-    /\b\d{1,2}\s*[:.]\s*\d{2}\b/g;
+        /\b\d{1,2}\s*[:.]\s*\d{2}\b/g;
 
     let match;
 
-    while((match=regex.exec(text)) !== null){
+    while ((match = regex.exec(text)) !== null) {
 
         result.push({
 
             text:
-            match[0]
-            .replace(".",":")
-            .replace(/\s/g,""),
+                match[0]
+                    .replace(".", ":")
+                    .replace(/\s/g, ""),
 
-            index:match.index
+            index: match.index
 
         });
 
@@ -492,167 +574,245 @@ function findTimes(text){
 }
 
 
-/* ==================================================
+/* =====================================================
    KONTEXT
-================================================== */
+===================================================== */
 
-function getContext(text,index){
+function getContext(text, index) {
 
     let start =
-    text.lastIndexOf(".",index);
+        text.lastIndexOf(".", index);
 
     let end =
-    text.indexOf(".",index);
+        text.indexOf(".", index);
 
-    if(start===-1)
-        start=0;
-    else
+
+    if (start === -1) {
+
+        start = 0;
+
+    }
+    else {
+
         start++;
 
-    if(end===-1)
-        end=text.length;
+    }
+
+
+    if (end === -1) {
+
+        end = text.length;
+
+    }
+
 
     return text
-    .substring(start,end)
-    .replace(/\s+/g," ")
-    .trim();
+        .substring(start, end)
+        .replace(/\s+/g, " ")
+        .trim();
 
 }
 
 
-/* ==================================================
+/* =====================================================
    RUBRIK
-================================================== */
+===================================================== */
 
-function getTitle(text){
+function getTitle(text) {
 
-    const t=text.toLowerCase();
+    const t = text.toLowerCase();
 
-    if(t.includes("skolstart"))
+
+    if (t.includes("skolstart"))
         return "Skolstart";
 
-    if(t.includes("föräldramöte"))
+    if (t.includes("föräldramöte"))
         return "Föräldramöte";
 
-    if(t.includes("studiedag"))
+    if (t.includes("studiedag"))
         return "Studiedag";
 
-    if(t.includes("utedag"))
+    if (t.includes("utedag"))
         return "Utedag";
 
-    if(t.includes("utflykt"))
+    if (t.includes("utflykt"))
         return "Utflykt";
 
-    if(t.includes("friluftsdag"))
+    if (t.includes("friluftsdag"))
         return "Friluftsdag";
 
-    if(t.includes("klassrummet"))
+    if (t.includes("klassrummet"))
         return "Besök klassrummet";
 
-    if(t.includes("lov"))
+    if (t.includes("lov"))
         return "Lov";
 
-    if(t.includes("ledig"))
+    if (t.includes("ledig"))
         return "Ledig dag";
 
-    if(t.includes("möte"))
+    if (t.includes("möte"))
         return "Möte";
+
 
     return "Skolhändelse";
 
 }
 
 
-/* ==================================================
+/* =====================================================
    PLATS
-================================================== */
+===================================================== */
 
-function getPlace(text){
+function getPlace(text) {
 
-    const t=text.toLowerCase();
+    const t = text.toLowerCase();
 
-    const places=[
 
-        ["vedema","Vedema"],
-        ["skolgården","Skolgården"],
-        ["klassrummet","Klassrummet"],
-        ["idrottshallen","Idrottshallen"],
-        ["biblioteket","Biblioteket"],
-        ["simhallen","Simhallen"]
+    const places = [
+
+        ["vedema", "Vedema"],
+        ["skolgården", "Skolgården"],
+        ["klassrummet", "Klassrummet"],
+        ["idrottshallen", "Idrottshallen"],
+        ["biblioteket", "Biblioteket"],
+        ["simhallen", "Simhallen"]
 
     ];
 
-    for(const place of places){
 
-        if(t.includes(place[0]))
+    for (const place of places) {
+
+        if (t.includes(place[0])) {
+
             return place[1];
 
+        }
+
     }
+
 
     return "";
 
 }
 
 
-/* ==================================================
+/* =====================================================
    EXTRA INFO
-================================================== */
+===================================================== */
 
-function getInfo(text){
+function getInfo(text) {
 
-    const result=[];
+    const result = [];
 
-    const t=text.toLowerCase();
+    const t = text.toLowerCase();
 
-    if(t.includes("eleverna är lediga"))
-        result.push("Eleverna är lediga");
 
-    if(t.includes("mer information"))
-        result.push("Mer information kommer");
+    if (t.includes("eleverna är lediga")) {
 
-    const take=t.indexOf("ta med");
+        result.push(
+            "Eleverna är lediga"
+        );
 
-    if(take>=0)
-        result.push(text.substring(take));
+    }
+
+
+    if (t.includes("mer information")) {
+
+        result.push(
+            "Mer information kommer"
+        );
+
+    }
+
+
+    const take =
+        t.indexOf("ta med");
+
+
+    if (take >= 0) {
+
+        result.push(
+            text.substring(take)
+        );
+
+    }
+
 
     return result.join(" • ");
 
 }
 
 
-/* ==================================================
-   DUBBELKOLL
-================================================== */
+/* =====================================================
+   SORTERA
+===================================================== */
 
-function isDuplicate(event){
+function sortEvents() {
 
-    return events.some(old =>
+    events.sort(function(a, b) {
 
-        old.day == event.day &&
-        old.month == event.month &&
-        old.year == event.year &&
-        String(old.title).toLowerCase()
-        ==
-        String(event.title).toLowerCase()
+        const A =
+            new Date(
+                a.year,
+                a.month - 1,
+                a.day
+            );
 
-    );
+        const B =
+            new Date(
+                b.year,
+                b.month - 1,
+                b.day
+            );
+
+        return A - B;
+
+    });
 
 }
 
 
-/* ==================================================
-   TOLKA
-================================================== */
+/* =====================================================
+   DUBBLETT
+===================================================== */
 
-window.analyzeText=function(){
+function isDuplicate(event) {
+
+    return events.some(function(old) {
+
+        return (
+
+            old.day == event.day &&
+
+            old.month == event.month &&
+
+            old.year == event.year &&
+
+            String(old.title).toLowerCase()
+            ===
+            String(event.title).toLowerCase()
+
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   TOLKA MEDDELANDE
+===================================================== */
+
+window.analyzeText = function() {
 
     const text =
-    document
-    .getElementById("schoolText")
-    .value
-    .trim();
+        document
+            .getElementById("schoolText")
+            .value
+            .trim();
 
-    if(!text){
+
+    if (!text) {
 
         alert(
             "Klistra in skolans meddelande först."
@@ -663,32 +823,35 @@ window.analyzeText=function(){
     }
 
 
-    const dates=findDates(text);
+    const dates =
+        findDates(text);
 
-    const times=findTimes(text);
+    const times =
+        findTimes(text);
 
-    detected=[];
+
+    detected = [];
 
 
-    for(const date of dates){
+    for (const date of dates) {
 
         const context =
-        getContext(
-            text,
-            date.index
-        );
+            getContext(
+                text,
+                date.index
+            );
 
 
-        let localTimes=[];
+        let localTimes = [];
 
 
-        for(const time of times){
+        for (const time of times) {
 
-            if(
+            if (
                 Math.abs(
-                    time.index-date.index
-                )<300
-            ){
+                    time.index - date.index
+                ) < 300
+            ) {
 
                 localTimes.push(
                     time.text
@@ -699,41 +862,56 @@ window.analyzeText=function(){
         }
 
 
-        if(localTimes.length>2)
-            localTimes=localTimes.slice(0,2);
+        if (localTimes.length > 2) {
+
+            localTimes =
+                localTimes.slice(0, 2);
+
+        }
 
 
-        const event={
+        const event = {
 
-            day:date.day,
+            day: date.day,
 
-            month:date.month,
+            month: date.month,
 
-            year:date.year,
+            year: date.year,
 
-            title:getTitle(context),
+            title:
+                getTitle(context),
 
-            place:getPlace(context),
+            place:
+                getPlace(context),
 
-            info:getInfo(context),
+            info:
+                getInfo(context),
 
-            times:localTimes,
+            times:
+                localTimes,
 
-            original:context
+            original:
+                context
 
         };
 
 
-        if(
-            !detected.some(x =>
+        const duplicate =
+            detected.some(function(x) {
 
-                x.day==event.day &&
-                x.month==event.month &&
-                x.year==event.year &&
-                x.title==event.title
+                return (
 
-            )
-        ){
+                    x.day == event.day &&
+                    x.month == event.month &&
+                    x.year == event.year &&
+                    x.title == event.title
+
+                );
+
+            });
+
+
+        if (!duplicate) {
 
             detected.push(event);
 
@@ -747,29 +925,30 @@ window.analyzeText=function(){
 };
 
 
-/* ==================================================
-   FÖRHANDSVISNING
-================================================== */
+/* =====================================================
+   VISA FÖRHANDSVISNING
+===================================================== */
 
-function showPreview(){
+function showPreview() {
 
     const box =
-    document.getElementById("preview");
-
-    box.innerHTML="";
+        document.getElementById("preview");
 
 
-    if(!detected.length){
+    box.innerHTML = "";
 
-        box.innerHTML=
-        `<div class="empty">
-        Inga datum hittades.
-        </div>`;
+
+    if (!detected.length) {
+
+        box.innerHTML =
+            `<div class="empty">
+                Inga datum hittades.
+            </div>`;
 
     }
 
 
-    detected.forEach((e,i)=>{
+    detected.forEach(function(e, i) {
 
         box.innerHTML += `
 
@@ -778,11 +957,12 @@ function showPreview(){
             <div class="check">
 
                 <input
-                type="checkbox"
-                id="keep_${i}"
-                checked>
+                    type="checkbox"
+                    id="keep_${i}"
+                    checked>
 
             </div>
+
 
             <div class="date">
 
@@ -792,28 +972,35 @@ function showPreview(){
 
             </div>
 
-            <input
-            class="edit"
-            id="title_${i}"
-            value="${safe(e.title)}"
-            placeholder="Rubrik">
 
             <input
-            class="edit"
-            id="time_${i}"
-            value="${safe(e.times.join(" – "))}"
-            placeholder="Tid">
+                class="edit"
+                id="title_${i}"
+                value="${safe(e.title)}"
+                placeholder="Rubrik">
+
 
             <input
-            class="edit"
-            id="place_${i}"
-            value="${safe(e.place)}"
-            placeholder="Plats">
+                class="edit"
+                id="time_${i}"
+                value="${safe(
+                    e.times.join(" – ")
+                )}"
+                placeholder="Tid">
+
+
+            <input
+                class="edit"
+                id="place_${i}"
+                value="${safe(e.place)}"
+                placeholder="Plats">
+
 
             <textarea
-            class="edit"
-            id="info_${i}"
-            placeholder="Information">${safe(e.info)}</textarea>
+                class="edit"
+                id="info_${i}"
+                placeholder="Information">${safe(e.info)}</textarea>
+
 
             <div class="original">
 
@@ -829,92 +1016,120 @@ function showPreview(){
 
 
     document
-    .getElementById("previewCard")
-    .classList.remove("hidden");
+        .getElementById("previewCard")
+        .classList.remove("hidden");
 
 }
 
 
-/* ==================================================
-   SPARA TILL FIREBASE
-================================================== */
+/* =====================================================
+   SPARA
+===================================================== */
 
-window.saveSelected=async function(){
+window.saveSelected = async function() {
 
-    let saved=0;
+    let saved = 0;
 
 
-    for(let i=0;i<detected.length;i++){
+    for (
+        let i = 0;
+        i < detected.length;
+        i++
+    ) {
 
         const checkbox =
-        document.getElementById(
-            "keep_"+i
-        );
+            document.getElementById(
+                "keep_" + i
+            );
 
 
-        if(
+        if (
             !checkbox ||
             !checkbox.checked
-        )
+        ) {
+
             continue;
+
+        }
 
 
         const title =
-        document
-        .getElementById("title_"+i)
-        .value
-        .trim();
+            document
+                .getElementById(
+                    "title_" + i
+                )
+                .value
+                .trim();
 
 
         const time =
-        document
-        .getElementById("time_"+i)
-        .value
-        .trim();
+            document
+                .getElementById(
+                    "time_" + i
+                )
+                .value
+                .trim();
 
 
         const place =
-        document
-        .getElementById("place_"+i)
-        .value
-        .trim();
+            document
+                .getElementById(
+                    "place_" + i
+                )
+                .value
+                .trim();
 
 
         const info =
-        document
-        .getElementById("info_"+i)
-        .value;
+            document
+                .getElementById(
+                    "info_" + i
+                )
+                .value;
 
 
-        const newEvent={
+        const newEvent = {
 
-            day:detected[i].day,
+            day:
+                detected[i].day,
 
-            month:detected[i].month,
+            month:
+                detected[i].month,
 
-            year:detected[i].year,
+            year:
+                detected[i].year,
 
             title:
-            title || "Skolhändelse",
+                title || "Skolhändelse",
 
             times:
-            time ? [time] : [],
+                time
+                    ? [time]
+                    : [],
 
-            place:place,
+            place:
+                place,
 
-            info:info,
+            info:
+                info,
+
+            original:
+                detected[i].original,
 
             created:
-            Date.now()
+                Date.now()
 
         };
 
 
-        if(isDuplicate(newEvent))
+        if (isDuplicate(newEvent)) {
+
             continue;
 
+        }
 
-        try{
+
+        try {
 
             await addDoc(
                 eventsRef,
@@ -923,12 +1138,16 @@ window.saveSelected=async function(){
 
             saved++;
 
-        }catch(error){
+        }
+        catch (error) {
 
             console.error(error);
 
-            alert(
-                "Kunde inte spara till Firebase."
+            showError(
+                "FEL VID SPARANDE:\n\n" +
+                error.code +
+                "\n" +
+                error.message
             );
 
             return;
@@ -938,67 +1157,68 @@ window.saveSelected=async function(){
     }
 
 
-    document
-    .getElementById("schoolText")
-    .value="";
-
-
-    detected=[];
-
     closePreview();
 
 
-    alert(
-        saved+
-        " händelse"+
-        (saved===1?"":"r")+
-        " sparad"+
-        (saved===1?"":"e")+
-        " i Skoljess."
+    document
+        .getElementById("schoolText")
+        .value = "";
+
+
+    detected = [];
+
+
+    showSuccess(
+        saved +
+        " händelse" +
+        (saved === 1 ? "" : "r") +
+        " sparad" +
+        (saved === 1 ? "" : "e") +
+        " i molnet."
     );
 
 };
 
 
-/* ==================================================
-   STÄNG
-================================================== */
+/* =====================================================
+   STÄNG FÖRHANDSVISNING
+===================================================== */
 
-window.closePreview=function(){
+window.closePreview = function() {
 
     document
-    .getElementById("previewCard")
-    .classList.add("hidden");
+        .getElementById("previewCard")
+        .classList.add("hidden");
 
 };
 
 
-/* ==================================================
+/* =====================================================
    VISA HÄNDELSER
-================================================== */
+===================================================== */
 
-function showEvents(){
+function showEvents() {
 
     const box =
-    document.getElementById("events");
+        document.getElementById("events");
 
 
-    if(!events.length){
+    if (!events.length) {
 
-        box.innerHTML=
-        `<div class="empty">
-        Inga sparade händelser.
-        </div>`;
+        box.innerHTML =
+            `<div class="empty">
+                Inga sparade händelser.
+            </div>`;
 
         return;
 
     }
 
 
-    box.innerHTML="";
+    box.innerHTML = "";
 
 
-    events.forEach((e,index)=>{
+    events.forEach(function(e) {
 
         box.innerHTML += `
 
@@ -1021,85 +1241,27 @@ function showEvents(){
 
 
             ${
-                e.times?.length
+                e.times &&
+                e.times.length
                 ?
-                `<div class="time">
-                    ${safe(e.times.join(" – "))}
-                </div>`
-                :""
+                `
+                <div class="time">
+
+                    ${safe(
+                        e.times.join(" – ")
+                    )}
+
+                </div>
+                `
+                :
+                ""
             }
 
 
             ${
                 e.place
                 ?
-                `<div class="info">
-                    Plats: ${safe(e.place)}
-                </div>`
-                :""
-            }
+                `
+                <div class="info">
 
-
-            ${
-                e.info
-                ?
-                `<div class="info">
-                    ${safe(e.info)}
-                </div>`
-                :""
-            }
-
-
-            <button
-            class="danger"
-            onclick="deleteEvent('${e.id}')">
-
-                Ta bort
-
-            </button>
-
-        </div>
-
-        `;
-
-    });
-
-}
-
-
-/* ==================================================
-   TA BORT FRÅN FIREBASE
-================================================== */
-
-window.deleteEvent=async function(id){
-
-    if(
-        !confirm(
-            "Ta bort denna händelse?"
-        )
-    )
-        return;
-
-
-    try{
-
-        await deleteDoc(
-            doc(db,"events",id)
-        );
-
-    }catch(error){
-
-        console.error(error);
-
-        alert(
-            "Kunde inte ta bort händelsen."
-        );
-
-    }
-
-};
-
-</script>
-
-</body>
-</html>
+                    Plats: ${safe(e
