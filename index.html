@@ -2,15 +2,12 @@
 <html lang="sv">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>Jessii Koll</title>
+<title>Skoljess</title>
 
 <style>
-
-*{
-    box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
     margin:0;
@@ -25,9 +22,7 @@ h1{
     margin:10px 0 20px;
 }
 
-h2{
-    margin-top:0;
-}
+h2{margin-top:0}
 
 .card{
     background:#191c21;
@@ -40,7 +35,7 @@ textarea{
     width:100%;
     min-height:220px;
     background:#252930;
-    color:white;
+    color:#fff;
     border:1px solid #3a3f48;
     border-radius:10px;
     padding:12px;
@@ -55,18 +50,13 @@ button{
     padding:14px;
     margin-top:10px;
     background:#3478f6;
-    color:white;
+    color:#fff;
     font-size:16px;
     font-weight:bold;
 }
 
-button.danger{
-    background:#8b3030;
-}
-
-button.secondary{
-    background:#30343b;
-}
+button.danger{background:#8b3030}
+button.secondary{background:#30343b}
 
 .event{
     background:#252930;
@@ -116,18 +106,10 @@ button.secondary{
     height:23px;
 }
 
-.clear{
-    clear:both;
-}
-
-.hidden{
-    display:none;
-}
-
 .edit{
     width:100%;
     background:#30343b;
-    color:white;
+    color:#fff;
     border:1px solid #454a53;
     border-radius:8px;
     padding:10px;
@@ -135,9 +117,9 @@ button.secondary{
     font-size:15px;
 }
 
-textarea.edit{
-    min-height:100px;
-}
+textarea.edit{min-height:100px}
+
+.hidden{display:none}
 
 .empty{
     color:#777;
@@ -145,16 +127,33 @@ textarea.edit{
     padding:20px;
 }
 
+.status{
+    text-align:center;
+    color:#777;
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+.loading{
+    text-align:center;
+    padding:20px;
+    color:#aaa;
+}
 </style>
 </head>
 
-
 <body>
 
-<h1>📚 Jessii Koll</h1>
+<h1>Jessii Koll</h1>
+
+<div class="status" id="status">
+Ansluter till Skoljess...
+</div>
 
 
-<div class="card">
+<!-- ADMINDEL -->
+
+<div class="card" id="adminCard">
 
 <h2>Skolmeddelande</h2>
 
@@ -170,56 +169,167 @@ Tolka meddelandet
 </div>
 
 
-<div
-class="card hidden"
-id="previewCard">
+<!-- FÖRHANDSVISNING -->
+
+<div class="card hidden" id="previewCard">
 
 <h2>Hittade händelser</h2>
 
 <div id="preview"></div>
 
 <button onclick="saveSelected()">
-Spara
+Spara valda
 </button>
 
-<button
-class="secondary"
-onclick="closePreview()">
+<button class="secondary" onclick="closePreview()">
 Avbryt
 </button>
 
 </div>
 
 
+<!-- SPARADE -->
+
 <div class="card">
 
 <h2>Kommande</h2>
 
-<div id="events"></div>
+<div id="events">
+<div class="loading">Hämtar schema...</div>
+</div>
 
 </div>
 
 
-<script>
+<script type="module">
+
+/* ==================================================
+   FIREBASE
+================================================== */
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    deleteDoc,
+    doc,
+    onSnapshot,
+    query,
+    orderBy
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
-/* ==============================
+const firebaseConfig = {
+
+    apiKey:
+    "AIzaSyC4HbUAHWoiBcm7WDfzJZnL8HjpWf26TmM",
+
+    authDomain:
+    "skoljess-4ce58.firebaseapp.com",
+
+    projectId:
+    "skoljess-4ce58",
+
+    storageBucket:
+    "skoljess-4ce58.firebasestorage.app",
+
+    messagingSenderId:
+    "377684096428",
+
+    appId:
+    "1:377684096428:web:2c7a493b615ef128d37609",
+
+    measurementId:
+    "G-41KT9N1DRE"
+};
+
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
+
+
+/* ==================================================
    DATA
-============================== */
+================================================== */
 
-var events =
-JSON.parse(
-    localStorage.getItem("jessiiEvents") || "[]"
+let events = [];
+
+let detected = [];
+
+
+/* ==================================================
+   FIREBASE-LYSSNARE
+================================================== */
+
+const eventsRef =
+collection(db,"events");
+
+
+const eventsQuery =
+query(
+    eventsRef,
+    orderBy("year"),
+    orderBy("month"),
+    orderBy("day")
 );
 
-var detected = [];
+
+onSnapshot(
+    eventsQuery,
+
+    snapshot => {
+
+        events =
+        snapshot.docs.map(
+            item => ({
+
+                id:item.id,
+                ...item.data()
+
+            })
+        );
+
+        document
+        .getElementById("status")
+        .textContent =
+        "Synkad med Skoljess";
+
+        showEvents();
+
+    },
+
+    error => {
+
+        console.error(error);
+
+        document
+        .getElementById("status")
+        .textContent =
+        "Kunde inte ansluta till databasen";
+
+        document
+        .getElementById("events")
+        .innerHTML =
+        `<div class="empty">
+        Kunde inte hämta schemat.
+        </div>`;
+
+    }
+);
 
 
-/* ==============================
+/* ==================================================
    MÅNADER
-============================== */
+================================================== */
 
-var months = {
+const months = {
 
     januari:1,
     februari:2,
@@ -237,53 +347,12 @@ var months = {
 };
 
 
-/* ==============================
-   SPARA DATA
-============================== */
-
-function saveData(){
-
-    localStorage.setItem(
-        "jessiiEvents",
-        JSON.stringify(events)
-    );
-
-}
-
-
-/* ==============================
-   SKYDDA HTML
-============================== */
-
-function safe(text){
-
-    return String(text || "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-
-}
-
-
-/* ==============================
-   MÅNADSNAMN
-============================== */
-
 function monthName(number){
 
-    for(
-        var name in months
-    ){
+    for(const name in months){
 
-        if(
-            months[name] == number
-        ){
-
+        if(months[name] == number)
             return name;
-
-        }
 
     }
 
@@ -292,57 +361,62 @@ function monthName(number){
 }
 
 
-/* ==============================
+/* ==================================================
    ÅR
-============================== */
+================================================== */
 
 function getYear(month){
 
-    var now =
+    const now =
     new Date();
 
-    var year =
+    let year =
     now.getFullYear();
 
-    var currentMonth =
+    const currentMonth =
     now.getMonth()+1;
 
-
-    if(
-        month < currentMonth-2
-    ){
-
+    if(month < currentMonth-2)
         year++;
-
-    }
-
 
     return year;
 
 }
 
 
-/* ==============================
-   HITTA DATUM
-============================== */
+/* ==================================================
+   SKYDDA HTML
+================================================== */
+
+function safe(text){
+
+    return String(text || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* ==================================================
+   DATUM
+================================================== */
 
 function findDates(text){
 
-    var result=[];
+    const result=[];
 
-    var regex =
+    const regex =
     /(\d{1,2})\s*(?:\/|-|\.)\s*(\d{1,2})|(\d{1,2})\s+(januari|februari|mars|april|maj|juni|juli|augusti|september|oktober|november|december)/gi;
 
-    var match;
+    let match;
 
+    while((match=regex.exec(text)) !== null){
 
-    while(
-        (match=regex.exec(text)) !== null
-    ){
-
-        var day;
-        var month;
-
+        let day;
+        let month;
 
         if(match[1]){
 
@@ -360,7 +434,6 @@ function findDates(text){
 
         }
 
-
         if(
             day>=1 &&
             day<=31 &&
@@ -370,12 +443,9 @@ function findDates(text){
 
             result.push({
 
-                day:day,
-
-                month:month,
-
+                day,
+                month,
                 year:getYear(month),
-
                 index:match.index
 
             });
@@ -384,29 +454,25 @@ function findDates(text){
 
     }
 
-
     return result;
 
 }
 
 
-/* ==============================
-   HITTA TIDER
-============================== */
+/* ==================================================
+   TIDER
+================================================== */
 
 function findTimes(text){
 
-    var result=[];
+    const result=[];
 
-    var regex =
+    const regex =
     /\b\d{1,2}\s*[:.]\s*\d{2}\b/g;
 
-    var match;
+    let match;
 
-
-    while(
-        (match=regex.exec(text)) !== null
-    ){
+    while((match=regex.exec(text)) !== null){
 
         result.push({
 
@@ -421,42 +487,30 @@ function findTimes(text){
 
     }
 
-
     return result;
 
 }
 
 
-/* ==============================
+/* ==================================================
    KONTEXT
-============================== */
+================================================== */
 
 function getContext(text,index){
 
-    var start=
+    let start =
     text.lastIndexOf(".",index);
 
-    var end=
+    let end =
     text.indexOf(".",index);
 
-
-    if(start===-1){
-
+    if(start===-1)
         start=0;
-
-    }else{
-
+    else
         start++;
 
-    }
-
-
-    if(end===-1){
-
+    if(end===-1)
         end=text.length;
-
-    }
-
 
     return text
     .substring(start,end)
@@ -466,66 +520,58 @@ function getContext(text,index){
 }
 
 
-/* ==============================
+/* ==================================================
    RUBRIK
-============================== */
+================================================== */
 
 function getTitle(text){
 
-    var t=
-    text.toLowerCase();
+    const t=text.toLowerCase();
 
-
-    if(t.indexOf("skolstart")>=0)
+    if(t.includes("skolstart"))
         return "Skolstart";
 
-    if(t.indexOf("föräldramöte")>=0)
+    if(t.includes("föräldramöte"))
         return "Föräldramöte";
 
-    if(t.indexOf("studiedag")>=0)
+    if(t.includes("studiedag"))
         return "Studiedag";
 
-    if(t.indexOf("utedag")>=0)
+    if(t.includes("utedag"))
         return "Utedag";
 
-    if(t.indexOf("utflykt")>=0)
+    if(t.includes("utflykt"))
         return "Utflykt";
 
-    if(t.indexOf("friluftsdag")>=0)
+    if(t.includes("friluftsdag"))
         return "Friluftsdag";
 
-    if(t.indexOf("klassrummet")>=0)
+    if(t.includes("klassrummet"))
         return "Besök klassrummet";
 
-    if(t.indexOf("klassrum")>=0)
-        return "Besök klassrummet";
-
-    if(t.indexOf("lov")>=0)
+    if(t.includes("lov"))
         return "Lov";
 
-    if(t.indexOf("ledig")>=0)
+    if(t.includes("ledig"))
         return "Ledig dag";
 
-    if(t.indexOf("möte")>=0)
+    if(t.includes("möte"))
         return "Möte";
-
 
     return "Skolhändelse";
 
 }
 
 
-/* ==============================
+/* ==================================================
    PLATS
-============================== */
+================================================== */
 
 function getPlace(text){
 
-    var t=
-    text.toLowerCase();
+    const t=text.toLowerCase();
 
-
-    var places=[
+    const places=[
 
         ["vedema","Vedema"],
         ["skolgården","Skolgården"],
@@ -536,143 +582,75 @@ function getPlace(text){
 
     ];
 
+    for(const place of places){
 
-    for(
-        var i=0;
-        i<places.length;
-        i++
-    ){
-
-        if(
-            t.indexOf(
-                places[i][0]
-            )>=0
-        ){
-
-            return places[i][1];
-
-        }
+        if(t.includes(place[0]))
+            return place[1];
 
     }
-
 
     return "";
 
 }
 
 
-/* ==============================
-   INFO FRÅN TEXTEN
-============================== */
+/* ==================================================
+   EXTRA INFO
+================================================== */
 
 function getInfo(text){
 
-    var result=[];
+    const result=[];
 
-    var t=
-    text.toLowerCase();
+    const t=text.toLowerCase();
 
+    if(t.includes("eleverna är lediga"))
+        result.push("Eleverna är lediga");
 
-    if(
-        t.indexOf(
-            "eleverna är lediga"
-        )>=0
-    ){
+    if(t.includes("mer information"))
+        result.push("Mer information kommer");
 
-        result.push(
-            "Eleverna är lediga"
-        );
+    const take=t.indexOf("ta med");
 
-    }
-
-
-    if(
-        t.indexOf(
-            "mer information"
-        )>=0
-    ){
-
-        result.push(
-            "Mer information kommer"
-        );
-
-    }
-
-
-    var take=
-    t.indexOf("ta med");
-
-
-    if(take>=0){
-
-        result.push(
-            text.substring(take)
-        );
-
-    }
-
+    if(take>=0)
+        result.push(text.substring(take));
 
     return result.join(" • ");
 
 }
 
 
-/* ==============================
-   DUBBELT?
-============================== */
+/* ==================================================
+   DUBBELKOLL
+================================================== */
 
 function isDuplicate(event){
 
-    for(
-        var i=0;
-        i<events.length;
-        i++
-    ){
+    return events.some(old =>
 
-        var old=
-        events[i];
+        old.day == event.day &&
+        old.month == event.month &&
+        old.year == event.year &&
+        String(old.title).toLowerCase()
+        ==
+        String(event.title).toLowerCase()
 
-
-        if(
-
-            old.day==event.day &&
-
-            old.month==event.month &&
-
-            old.year==event.year &&
-
-            String(old.title)
-            .toLowerCase()
-            ==
-            String(event.title)
-            .toLowerCase()
-
-        ){
-
-            return true;
-
-        }
-
-    }
-
-
-    return false;
+    );
 
 }
 
 
-/* ==============================
-   TOLKA TEXT
-============================== */
+/* ==================================================
+   TOLKA
+================================================== */
 
-function analyzeText(){
+window.analyzeText=function(){
 
-    var text=
+    const text =
     document
     .getElementById("schoolText")
     .value
     .trim();
-
 
     if(!text){
 
@@ -685,51 +663,35 @@ function analyzeText(){
     }
 
 
-    var dates=
-    findDates(text);
+    const dates=findDates(text);
 
-    var times=
-    findTimes(text);
-
+    const times=findTimes(text);
 
     detected=[];
 
 
-    for(
-        var i=0;
-        i<dates.length;
-        i++
-    ){
+    for(const date of dates){
 
-        var date=
-        dates[i];
-
-
-        var context=
+        const context =
         getContext(
             text,
             date.index
         );
 
 
-        var localTimes=[];
+        let localTimes=[];
 
 
-        for(
-            var x=0;
-            x<times.length;
-            x++
-        ){
+        for(const time of times){
 
             if(
                 Math.abs(
-                    times[x].index-
-                    date.index
+                    time.index-date.index
                 )<300
             ){
 
                 localTimes.push(
-                    times[x].text
+                    time.text
                 );
 
             }
@@ -737,17 +699,11 @@ function analyzeText(){
         }
 
 
-        if(
-            localTimes.length>2
-        ){
-
-            localTimes=
-            localTimes.slice(0,2);
-
-        }
+        if(localTimes.length>2)
+            localTimes=localTimes.slice(0,2);
 
 
-        var event={
+        const event={
 
             day:date.day,
 
@@ -768,43 +724,15 @@ function analyzeText(){
         };
 
 
-        var duplicate=false;
-
-
-        for(
-            var y=0;
-            y<detected.length;
-            y++
-        ){
-
-            if(
-
-                detected[y].day==
-                event.day &&
-
-                detected[y].month==
-                event.month &&
-
-                detected[y].year==
-                event.year &&
-
-                detected[y].title==
-                event.title
-
-            ){
-
-                duplicate=true;
-
-                break;
-
-            }
-
-        }
-
-
         if(
-            !duplicate &&
-            !isDuplicate(event)
+            !detected.some(x =>
+
+                x.day==event.day &&
+                x.month==event.month &&
+                x.year==event.year &&
+                x.title==event.title
+
+            )
         ){
 
             detected.push(event);
@@ -816,112 +744,88 @@ function analyzeText(){
 
     showPreview();
 
-}
+};
 
 
-/* ==============================
-   VISA HÄNDELSER
-============================== */
+/* ==================================================
+   FÖRHANDSVISNING
+================================================== */
 
 function showPreview(){
 
-    var box=
-    document.getElementById(
-        "preview"
-    );
-
+    const box =
+    document.getElementById("preview");
 
     box.innerHTML="";
 
 
-    if(
-        detected.length===0
-    ){
+    if(!detected.length){
 
         box.innerHTML=
-        '<div class="empty">Inga nya händelser hittades.</div>';
+        `<div class="empty">
+        Inga datum hittades.
+        </div>`;
 
-    }else{
-
-
-        for(
-            var i=0;
-            i<detected.length;
-            i++
-        ){
-
-            var e=
-            detected[i];
+    }
 
 
-            box.innerHTML+=`
+    detected.forEach((e,i)=>{
 
-            <div class="event">
+        box.innerHTML += `
 
-                <div class="check">
+        <div class="event">
 
-                    <input
-                    type="checkbox"
-                    id="keep_${i}"
-                    checked>
-
-                </div>
-
-
-                <div class="date">
-
-                    ${e.day}
-                    ${monthName(e.month)}
-                    ${e.year}
-
-                </div>
-
+            <div class="check">
 
                 <input
-                class="edit"
-                id="title_${i}"
-                value="${safe(e.title)}"
-                placeholder="Rubrik">
-
-
-                <input
-                class="edit"
-                id="time_${i}"
-                value="${safe(
-                    e.times.join(" – ")
-                )}"
-                placeholder="Tid">
-
-
-                <input
-                class="edit"
-                id="place_${i}"
-                value="${safe(e.place)}"
-                placeholder="Plats">
-
-
-                <textarea
-                class="edit"
-                id="info_${i}"
-                placeholder="Information">${safe(e.info)}</textarea>
-
-
-                <div class="original">
-
-                    ${safe(e.original)}
-
-                </div>
-
-
-                <div class="clear"></div>
+                type="checkbox"
+                id="keep_${i}"
+                checked>
 
             </div>
 
-            `;
+            <div class="date">
 
-        }
+                ${e.day}
+                ${monthName(e.month)}
+                ${e.year}
 
-    }
+            </div>
+
+            <input
+            class="edit"
+            id="title_${i}"
+            value="${safe(e.title)}"
+            placeholder="Rubrik">
+
+            <input
+            class="edit"
+            id="time_${i}"
+            value="${safe(e.times.join(" – "))}"
+            placeholder="Tid">
+
+            <input
+            class="edit"
+            id="place_${i}"
+            value="${safe(e.place)}"
+            placeholder="Plats">
+
+            <textarea
+            class="edit"
+            id="info_${i}"
+            placeholder="Information">${safe(e.info)}</textarea>
+
+            <div class="original">
+
+                ${safe(e.original)}
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
 
 
     document
@@ -931,22 +835,18 @@ function showPreview(){
 }
 
 
-/* ==============================
-   SPARA VALDA
-============================== */
+/* ==================================================
+   SPARA TILL FIREBASE
+================================================== */
 
-function saveSelected(){
+window.saveSelected=async function(){
 
-    var saved=0;
+    let saved=0;
 
 
-    for(
-        var i=0;
-        i<detected.length;
-        i++
-    ){
+    for(let i=0;i<detected.length;i++){
 
-        var checkbox=
+        const checkbox =
         document.getElementById(
             "keep_"+i
         );
@@ -955,54 +855,38 @@ function saveSelected(){
         if(
             !checkbox ||
             !checkbox.checked
-        ){
-
+        )
             continue;
 
-        }
 
-
-        /*
-           HÄR hämtar vi ALLT
-           användaren har skrivit.
-        */
-
-        var title=
+        const title =
         document
-        .getElementById(
-            "title_"+i
-        )
+        .getElementById("title_"+i)
         .value
         .trim();
 
 
-        var time=
+        const time =
         document
-        .getElementById(
-            "time_"+i
-        )
+        .getElementById("time_"+i)
         .value
         .trim();
 
 
-        var place=
+        const place =
         document
-        .getElementById(
-            "place_"+i
-        )
+        .getElementById("place_"+i)
         .value
         .trim();
 
 
-        var info=
+        const info =
         document
-        .getElementById(
-            "info_"+i
-        )
+        .getElementById("info_"+i)
         .value;
 
 
-        var newEvent={
+        const newEvent={
 
             day:detected[i].day,
 
@@ -1011,141 +895,112 @@ function saveSelected(){
             year:detected[i].year,
 
             title:
-            title ||
-            "Skolhändelse",
+            title || "Skolhändelse",
 
             times:
-            time
-            ? [time]
-            : [],
+            time ? [time] : [],
 
-            place:
-            place,
+            place:place,
 
-            info:
-            info
+            info:info,
+
+            created:
+            Date.now()
 
         };
 
 
-        if(
-            !isDuplicate(newEvent)
-        ){
+        if(isDuplicate(newEvent))
+            continue;
 
-            events.push(
+
+        try{
+
+            await addDoc(
+                eventsRef,
                 newEvent
             );
 
             saved++;
+
+        }catch(error){
+
+            console.error(error);
+
+            alert(
+                "Kunde inte spara till Firebase."
+            );
+
+            return;
 
         }
 
     }
 
 
-    saveData();
-
-
-    document.getElementById(
-        "schoolText"
-    ).value="";
+    document
+    .getElementById("schoolText")
+    .value="";
 
 
     detected=[];
 
-
     closePreview();
-
-    showEvents();
 
 
     alert(
         saved+
         " händelse"+
-        (saved==1?"":"r")+
+        (saved===1?"":"r")+
         " sparad"+
-        (saved==1?"":"e")+
-        "."
+        (saved===1?"":"e")+
+        " i Skoljess."
     );
 
-}
+};
 
 
-/* ==============================
+/* ==================================================
    STÄNG
-============================== */
+================================================== */
 
-function closePreview(){
+window.closePreview=function(){
 
     document
     .getElementById("previewCard")
     .classList.add("hidden");
 
-}
+};
 
 
-/* ==============================
-   VISA SPARADE
-============================== */
+/* ==================================================
+   VISA HÄNDELSER
+================================================== */
 
 function showEvents(){
 
-    var box=
-    document.getElementById(
-        "events"
-    );
+    const box =
+    document.getElementById("events");
 
 
-    if(
-        events.length===0
-    ){
+    if(!events.length){
 
         box.innerHTML=
-        '<div class="empty">Inga sparade händelser.</div>';
+        `<div class="empty">
+        Inga sparade händelser.
+        </div>`;
 
         return;
 
     }
 
 
-    events.sort(
-        function(a,b){
-
-            var A=
-            new Date(
-                a.year,
-                a.month-1,
-                a.day
-            );
-
-            var B=
-            new Date(
-                b.year,
-                b.month-1,
-                b.day
-            );
-
-
-            return A-B;
-
-        }
-    );
-
-
     box.innerHTML="";
 
 
-    for(
-        var i=0;
-        i<events.length;
-        i++
-    ){
+    events.forEach((e,index)=>{
 
-        var e=
-        events[i];
-
-
-        box.innerHTML+=`
+        box.innerHTML += `
 
         <div class="event">
 
@@ -1166,56 +1021,38 @@ function showEvents(){
 
 
             ${
-                e.times &&
-                e.times.length
+                e.times?.length
                 ?
-                `
-                <div class="time">
-
-                    ${safe(
-                        e.times.join(" – ")
-                    )}
-
-                </div>
-                `
-                :
-                ""
+                `<div class="time">
+                    ${safe(e.times.join(" – "))}
+                </div>`
+                :""
             }
 
 
             ${
                 e.place
                 ?
-                `
-                <div class="info">
-
-                    📍 ${safe(e.place)}
-
-                </div>
-                `
-                :
-                ""
+                `<div class="info">
+                    Plats: ${safe(e.place)}
+                </div>`
+                :""
             }
 
 
             ${
                 e.info
                 ?
-                `
-                <div class="info">
-
+                `<div class="info">
                     ${safe(e.info)}
-
-                </div>
-                `
-                :
-                ""
+                </div>`
+                :""
             }
 
 
             <button
             class="danger"
-            onclick="deleteEvent(${i})">
+            onclick="deleteEvent('${e.id}')">
 
                 Ta bort
 
@@ -1225,46 +1062,42 @@ function showEvents(){
 
         `;
 
-    }
+    });
 
 }
 
 
-/* ==============================
-   TA BORT
-============================== */
+/* ==================================================
+   TA BORT FRÅN FIREBASE
+================================================== */
 
-function deleteEvent(index){
+window.deleteEvent=async function(id){
 
     if(
         !confirm(
             "Ta bort denna händelse?"
         )
-    ){
-
+    )
         return;
+
+
+    try{
+
+        await deleteDoc(
+            doc(db,"events",id)
+        );
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "Kunde inte ta bort händelsen."
+        );
 
     }
 
-
-    events.splice(
-        index,
-        1
-    );
-
-
-    saveData();
-
-    showEvents();
-
-}
-
-
-/* ==============================
-   START
-============================== */
-
-showEvents();
+};
 
 </script>
 
