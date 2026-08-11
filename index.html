@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Jessii Koll</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    padding:15px;
+    background:#0e1013;
+    color:#fff;
+    font-family:Arial,sans-serif;
+}
+
+h1{
+    text-align:center;
+    margin:10px 0 20px;
+}
+
+h2{
+    margin-top:0;
+}
+
+.card{
+    background:#191c21;
+    border-radius:15px;
+    padding:15px;
+    margin-bottom:15px;
+}
+
+textarea{
+    width:100%;
+    min-height:220px;
+    background:#252930;
+    color:white;
+    border:1px solid #3a3f48;
+    border-radius:10px;
+    padding:12px;
+    font-size:16px;
+    resize:vertical;
+}
+
+button{
+    width:100%;
+    border:0;
+    border-radius:10px;
+    padding:14px;
+    margin-top:10px;
+    background:#3478f6;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+}
+
+button.danger{
+    background:#8b3030;
+}
+
+button.secondary{
+    background:#30343b;
+}
+
+.event{
+    background:#252930;
+    border-radius:12px;
+    padding:14px;
+    margin-top:10px;
+    border-left:4px solid #3478f6;
+}
+
+.date{
+    color:#79a6ff;
+    font-weight:bold;
+    font-size:17px;
+}
+
+.title{
+    font-size:18px;
+    font-weight:bold;
+    margin-top:7px;
+}
+
+.time{
+    font-size:17px;
+    font-weight:bold;
+    margin-top:7px;
+}
+
+.info{
+    color:#aaa;
+    margin-top:7px;
+    line-height:1.5;
+    white-space:pre-wrap;
+}
+
+.original{
+    color:#777;
+    font-size:13px;
+    margin-top:10px;
+}
+
+.check{
+    float:right;
+}
+
+.check input{
+    width:23px;
+    height:23px;
+}
+
+.clear{
+    clear:both;
+}
+
+.hidden{
+    display:none;
+}
+
+.edit{
+    width:100%;
+    background:#30343b;
+    color:white;
+    border:1px solid #454a53;
+    border-radius:8px;
+    padding:10px;
+    margin-top:8px;
+    font-size:15px;
+}
+
+textarea.edit{
+    min-height:100px;
+}
+
+.empty{
+    color:#777;
+    text-align:center;
+    padding:20px;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<h1>📚 Jessii Koll</h1>
+
+
+<div class="card">
+
+<h2>Skolmeddelande</h2>
+
+<textarea
+id="schoolText"
+placeholder="Klistra in meddelandet från skolan här..."
+></textarea>
+
+<button onclick="analyzeText()">
+Tolka meddelandet
+</button>
+
+</div>
+
+
+<div
+class="card hidden"
+id="previewCard">
+
+<h2>Hittade händelser</h2>
+
+<div id="preview"></div>
+
+<button onclick="saveSelected()">
+Spara
+</button>
+
+<button
+class="secondary"
+onclick="closePreview()">
+Avbryt
+</button>
+
+</div>
+
+
+<div class="card">
+
+<h2>Kommande</h2>
+
+<div id="events"></div>
+
+</div>
+
+
+<script>
+
+
+/* ==============================
+   DATA
+============================== */
+
+var events =
+JSON.parse(
+    localStorage.getItem("jessiiEvents") || "[]"
+);
+
+var detected = [];
+
+
+/* ==============================
+   MÅNADER
+============================== */
+
+var months = {
+
+    januari:1,
+    februari:2,
+    mars:3,
+    april:4,
+    maj:5,
+    juni:6,
+    juli:7,
+    augusti:8,
+    september:9,
+    oktober:10,
+    november:11,
+    december:12
+
+};
+
+
+/* ==============================
+   SPARA DATA
+============================== */
+
+function saveData(){
+
+    localStorage.setItem(
+        "jessiiEvents",
+        JSON.stringify(events)
+    );
+
+}
+
+
+/* ==============================
+   SKYDDA HTML
+============================== */
+
+function safe(text){
+
+    return String(text || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* ==============================
+   MÅNADSNAMN
+============================== */
+
+function monthName(number){
+
+    for(
+        var name in months
+    ){
+
+        if(
+            months[name] == number
+        ){
+
+            return name;
+
+        }
+
+    }
+
+    return "";
+
+}
+
+
+/* ==============================
+   ÅR
+============================== */
+
+function getYear(month){
+
+    var now =
+    new Date();
+
+    var year =
+    now.getFullYear();
+
+    var currentMonth =
+    now.getMonth()+1;
+
+
+    if(
+        month < currentMonth-2
+    ){
+
+        year++;
+
+    }
+
+
+    return year;
+
+}
+
+
+/* ==============================
+   HITTA DATUM
+============================== */
+
+function findDates(text){
+
+    var result=[];
+
+    var regex =
+    /(\d{1,2})\s*(?:\/|-|\.)\s*(\d{1,2})|(\d{1,2})\s+(januari|februari|mars|april|maj|juni|juli|augusti|september|oktober|november|december)/gi;
+
+    var match;
+
+
+    while(
+        (match=regex.exec(text)) !== null
+    ){
+
+        var day;
+        var month;
+
+
+        if(match[1]){
+
+            day=parseInt(match[1]);
+            month=parseInt(match[2]);
+
+        }else{
+
+            day=parseInt(match[3]);
+
+            month=
+            months[
+                match[4].toLowerCase()
+            ];
+
+        }
+
+
+        if(
+            day>=1 &&
+            day<=31 &&
+            month>=1 &&
+            month<=12
+        ){
+
+            result.push({
+
+                day:day,
+
+                month:month,
+
+                year:getYear(month),
+
+                index:match.index
+
+            });
+
+        }
+
+    }
+
+
+    return result;
+
+}
+
+
+/* ==============================
+   HITTA TIDER
+============================== */
+
+function findTimes(text){
+
+    var result=[];
+
+    var regex =
+    /\b\d{1,2}\s*[:.]\s*\d{2}\b/g;
+
+    var match;
+
+
+    while(
+        (match=regex.exec(text)) !== null
+    ){
+
+        result.push({
+
+            text:
+            match[0]
+            .replace(".",":")
+            .replace(/\s/g,""),
+
+            index:match.index
+
+        });
+
+    }
+
+
+    return result;
+
+}
+
+
+/* ==============================
+   KONTEXT
+============================== */
+
+function getContext(text,index){
+
+    var start=
+    text.lastIndexOf(".",index);
+
+    var end=
+    text.indexOf(".",index);
+
+
+    if(start===-1){
+
+        start=0;
+
+    }else{
+
+        start++;
+
+    }
+
+
+    if(end===-1){
+
+        end=text.length;
+
+    }
+
+
+    return text
+    .substring(start,end)
+    .replace(/\s+/g," ")
+    .trim();
+
+}
+
+
+/* ==============================
+   RUBRIK
+============================== */
+
+function getTitle(text){
+
+    var t=
+    text.toLowerCase();
+
+
+    if(t.indexOf("skolstart")>=0)
+        return "Skolstart";
+
+    if(t.indexOf("föräldramöte")>=0)
+        return "Föräldramöte";
+
+    if(t.indexOf("studiedag")>=0)
+        return "Studiedag";
+
+    if(t.indexOf("utedag")>=0)
+        return "Utedag";
+
+    if(t.indexOf("utflykt")>=0)
+        return "Utflykt";
+
+    if(t.indexOf("friluftsdag")>=0)
+        return "Friluftsdag";
+
+    if(t.indexOf("klassrummet")>=0)
+        return "Besök klassrummet";
+
+    if(t.indexOf("klassrum")>=0)
+        return "Besök klassrummet";
+
+    if(t.indexOf("lov")>=0)
+        return "Lov";
+
+    if(t.indexOf("ledig")>=0)
+        return "Ledig dag";
+
+    if(t.indexOf("möte")>=0)
+        return "Möte";
+
+
+    return "Skolhändelse";
+
+}
+
+
+/* ==============================
+   PLATS
+============================== */
+
+function getPlace(text){
+
+    var t=
+    text.toLowerCase();
+
+
+    var places=[
+
+        ["vedema","Vedema"],
+        ["skolgården","Skolgården"],
+        ["klassrummet","Klassrummet"],
+        ["idrottshallen","Idrottshallen"],
+        ["biblioteket","Biblioteket"],
+        ["simhallen","Simhallen"]
+
+    ];
+
+
+    for(
+        var i=0;
+        i<places.length;
+        i++
+    ){
+
+        if(
+            t.indexOf(
+                places[i][0]
+            )>=0
+        ){
+
+            return places[i][1];
+
+        }
+
+    }
+
+
+    return "";
+
+}
+
+
+/* ==============================
+   INFO FRÅN TEXTEN
+============================== */
+
+function getInfo(text){
+
+    var result=[];
+
+    var t=
+    text.toLowerCase();
+
+
+    if(
+        t.indexOf(
+            "eleverna är lediga"
+        )>=0
+    ){
+
+        result.push(
+            "Eleverna är lediga"
+        );
+
+    }
+
+
+    if(
+        t.indexOf(
+            "mer information"
+        )>=0
+    ){
+
+        result.push(
+            "Mer information kommer"
+        );
+
+    }
+
+
+    var take=
+    t.indexOf("ta med");
+
+
+    if(take>=0){
+
+        result.push(
+            text.substring(take)
+        );
+
+    }
+
+
+    return result.join(" • ");
+
+}
+
+
+/* ==============================
+   DUBBELT?
+============================== */
+
+function isDuplicate(event){
+
+    for(
+        var i=0;
+        i<events.length;
+        i++
+    ){
+
+        var old=
+        events[i];
+
+
+        if(
+
+            old.day==event.day &&
+
+            old.month==event.month &&
+
+            old.year==event.year &&
+
+            String(old.title)
+            .toLowerCase()
+            ==
+            String(event.title)
+            .toLowerCase()
+
+        ){
+
+            return true;
+
+        }
+
+    }
+
+
+    return false;
+
+}
+
+
+/* ==============================
+   TOLKA TEXT
+============================== */
+
+function analyzeText(){
+
+    var text=
+    document
+    .getElementById("schoolText")
+    .value
+    .trim();
+
+
+    if(!text){
+
+        alert(
+            "Klistra in skolans meddelande först."
+        );
+
+        return;
+
+    }
+
+
+    var dates=
+    findDates(text);
+
+    var times=
+    findTimes(text);
+
+
+    detected=[];
+
+
+    for(
+        var i=0;
+        i<dates.length;
+        i++
+    ){
+
+        var date=
+        dates[i];
+
+
+        var context=
+        getContext(
+            text,
+            date.index
+        );
+
+
+        var localTimes=[];
+
+
+        for(
+            var x=0;
+            x<times.length;
+            x++
+        ){
+
+            if(
+                Math.abs(
+                    times[x].index-
+                    date.index
+                )<300
+            ){
+
+                localTimes.push(
+                    times[x].text
+                );
+
+            }
+
+        }
+
+
+        if(
+            localTimes.length>2
+        ){
+
+            localTimes=
+            localTimes.slice(0,2);
+
+        }
+
+
+        var event={
+
+            day:date.day,
+
+            month:date.month,
+
+            year:date.year,
+
+            title:getTitle(context),
+
+            place:getPlace(context),
+
+            info:getInfo(context),
+
+            times:localTimes,
+
+            original:context
+
+        };
+
+
+        var duplicate=false;
+
+
+        for(
+            var y=0;
+            y<detected.length;
+            y++
+        ){
+
+            if(
+
+                detected[y].day==
+                event.day &&
+
+                detected[y].month==
+                event.month &&
+
+                detected[y].year==
+                event.year &&
+
+                detected[y].title==
+                event.title
+
+            ){
+
+                duplicate=true;
+
+                break;
+
+            }
+
+        }
+
+
+        if(
+            !duplicate &&
+            !isDuplicate(event)
+        ){
+
+            detected.push(event);
+
+        }
+
+    }
+
+
+    showPreview();
+
+}
+
+
+/* ==============================
+   VISA HÄNDELSER
+============================== */
+
+function showPreview(){
+
+    var box=
+    document.getElementById(
+        "preview"
+    );
+
+
+    box.innerHTML="";
+
+
+    if(
+        detected.length===0
+    ){
+
+        box.innerHTML=
+        '<div class="empty">Inga nya händelser hittades.</div>';
+
+    }else{
+
+
+        for(
+            var i=0;
+            i<detected.length;
+            i++
+        ){
+
+            var e=
+            detected[i];
+
+
+            box.innerHTML+=`
+
+            <div class="event">
+
+                <div class="check">
+
+                    <input
+                    type="checkbox"
+                    id="keep_${i}"
+                    checked>
+
+                </div>
+
+
+                <div class="date">
+
+                    ${e.day}
+                    ${monthName(e.month)}
+                    ${e.year}
+
+                </div>
+
+
+                <input
+                class="edit"
+                id="title_${i}"
+                value="${safe(e.title)}"
+                placeholder="Rubrik">
+
+
+                <input
+                class="edit"
+                id="time_${i}"
+                value="${safe(
+                    e.times.join(" – ")
+                )}"
+                placeholder="Tid">
+
+
+                <input
+                class="edit"
+                id="place_${i}"
+                value="${safe(e.place)}"
+                placeholder="Plats">
+
+
+                <textarea
+                class="edit"
+                id="info_${i}"
+                placeholder="Information">${safe(e.info)}</textarea>
+
+
+                <div class="original">
+
+                    ${safe(e.original)}
+
+                </div>
+
+
+                <div class="clear"></div>
+
+            </div>
+
+            `;
+
+        }
+
+    }
+
+
+    document
+    .getElementById("previewCard")
+    .classList.remove("hidden");
+
+}
+
+
+/* ==============================
+   SPARA VALDA
+============================== */
+
+function saveSelected(){
+
+    var saved=0;
+
+
+    for(
+        var i=0;
+        i<detected.length;
+        i++
+    ){
+
+        var checkbox=
+        document.getElementById(
+            "keep_"+i
+        );
+
+
+        if(
+            !checkbox ||
+            !checkbox.checked
+        ){
+
+            continue;
+
+        }
+
+
+        /*
+           HÄR hämtar vi ALLT
+           användaren har skrivit.
+        */
+
+        var title=
+        document
+        .getElementById(
+            "title_"+i
+        )
+        .value
+        .trim();
+
+
+        var time=
+        document
+        .getElementById(
+            "time_"+i
+        )
+        .value
+        .trim();
+
+
+        var place=
+        document
+        .getElementById(
+            "place_"+i
+        )
+        .value
+        .trim();
+
+
+        var info=
+        document
+        .getElementById(
+            "info_"+i
+        )
+        .value;
+
+
+        var newEvent={
+
+            day:detected[i].day,
+
+            month:detected[i].month,
+
+            year:detected[i].year,
+
+            title:
+            title ||
+            "Skolhändelse",
+
+            times:
+            time
+            ? [time]
+            : [],
+
+            place:
+            place,
+
+            info:
+            info
+
+        };
+
+
+        if(
+            !isDuplicate(newEvent)
+        ){
+
+            events.push(
+                newEvent
+            );
+
+            saved++;
+
+        }
+
+    }
+
+
+    saveData();
+
+
+    document.getElementById(
+        "schoolText"
+    ).value="";
+
+
+    detected=[];
+
+
+    closePreview();
+
+    showEvents();
+
+
+    alert(
+        saved+
+        " händelse"+
+        (saved==1?"":"r")+
+        " sparad"+
+        (saved==1?"":"e")+
+        "."
+    );
+
+}
+
+
+/* ==============================
+   STÄNG
+============================== */
+
+function closePreview(){
+
+    document
+    .getElementById("previewCard")
+    .classList.add("hidden");
+
+}
+
+
+/* ==============================
+   VISA SPARADE
+============================== */
+
+function showEvents(){
+
+    var box=
+    document.getElementById(
+        "events"
+    );
+
+
+    if(
+        events.length===0
+    ){
+
+        box.innerHTML=
+        '<div class="empty">Inga sparade händelser.</div>';
+
+        return;
+
+    }
+
+
+    events.sort(
+        function(a,b){
+
+            var A=
+            new Date(
+                a.year,
+                a.month-1,
+                a.day
+            );
+
+            var B=
+            new Date(
+                b.year,
+                b.month-1,
+                b.day
+            );
+
+
+            return A-B;
+
+        }
+    );
+
+
+    box.innerHTML="";
+
+
+    for(
+        var i=0;
+        i<events.length;
+        i++
+    ){
+
+        var e=
+        events[i];
+
+
+        box.innerHTML+=`
+
+        <div class="event">
+
+            <div class="date">
+
+                ${e.day}
+                ${monthName(e.month)}
+                ${e.year}
+
+            </div>
+
+
+            <div class="title">
+
+                ${safe(e.title)}
+
+            </div>
+
+
+            ${
+                e.times &&
+                e.times.length
+                ?
+                `
+                <div class="time">
+
+                    ${safe(
+                        e.times.join(" – ")
+                    )}
+
+                </div>
+                `
+                :
+                ""
+            }
+
+
+            ${
+                e.place
+                ?
+                `
+                <div class="info">
+
+                    📍 ${safe(e.place)}
+
+                </div>
+                `
+                :
+                ""
+            }
+
+
+            ${
+                e.info
+                ?
+                `
+                <div class="info">
+
+                    ${safe(e.info)}
+
+                </div>
+                `
+                :
+                ""
+            }
+
+
+            <button
+            class="danger"
+            onclick="deleteEvent(${i})">
+
+                Ta bort
+
+            </button>
+
+        </div>
+
+        `;
+
+    }
+
+}
+
+
+/* ==============================
+   TA BORT
+============================== */
+
+function deleteEvent(index){
+
+    if(
+        !confirm(
+            "Ta bort denna händelse?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    events.splice(
+        index,
+        1
+    );
+
+
+    saveData();
+
+    showEvents();
+
+}
+
+
+/* ==============================
+   START
+============================== */
+
+showEvents();
+
+</script>
+
+</body>
+</html>
