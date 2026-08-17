@@ -3,19 +3,1333 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Skoljess test</title>
+
+<title>Jessii Koll</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+:root{
+    --bg:#080a0e;
+    --panel:#12161c;
+    --panel2:#1a2028;
+    --border:#29313c;
+    --text:#ffffff;
+    --muted:#9da7b4;
+    --accent:#6ea8fe;
+    --yellow:#facc15;
+    --green:#4ade80;
+    --red:#fb7185;
+}
+
+body{
+    margin:0;
+    padding:15px;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+.container{
+    width:100%;
+    max-width:760px;
+    margin:auto;
+}
+
+header{
+    text-align:center;
+    padding:8px 0 20px;
+}
+
+.logo{
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+.subtitle{
+    color:var(--muted);
+    margin-top:5px;
+}
+
+.panel{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:16px;
+    margin-bottom:15px;
+}
+
+.panel-title{
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:12px;
+}
+
+textarea,
+input{
+    width:100%;
+    background:#0d1015;
+    color:white;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:13px;
+    font-size:16px;
+    outline:none;
+}
+
+textarea:focus,
+input:focus{
+    border-color:var(--accent);
+}
+
+textarea{
+    min-height:200px;
+    resize:vertical;
+}
+
+button{
+    width:100%;
+    border:0;
+    border-radius:12px;
+    padding:14px;
+    margin-top:10px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    background:var(--accent);
+    color:#07101c;
+}
+
+button.secondary{
+    background:var(--panel2);
+    color:white;
+    border:1px solid var(--border);
+}
+
+button.danger{
+    background:#351820;
+    color:#ff9aaa;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.notice{
+    margin-top:10px;
+    padding:12px;
+    background:#142030;
+    border:1px solid #2b405b;
+    border-radius:12px;
+    line-height:1.45;
+}
+
+.hidden{
+    display:none;
+}
+
+.day{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:18px;
+    overflow:hidden;
+    margin-bottom:12px;
+}
+
+.day-header{
+    background:var(--panel2);
+    padding:15px 16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.weekday{
+    color:var(--accent);
+    font-size:14px;
+    font-weight:bold;
+    text-transform:uppercase;
+}
+
+.date{
+    font-size:22px;
+    font-weight:bold;
+    margin-top:3px;
+}
+
+.today{
+    background:#173824;
+    color:var(--green);
+    padding:5px 9px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.event{
+    padding:15px 16px;
+    border-top:1px solid var(--border);
+}
+
+.time{
+    color:var(--yellow);
+    font-size:21px;
+    font-weight:bold;
+}
+
+.event-title{
+    font-size:18px;
+    font-weight:bold;
+    margin-top:4px;
+}
+
+.event-info{
+    color:#c2cad4;
+    line-height:1.45;
+    margin-top:7px;
+    white-space:pre-wrap;
+}
+
+.event-source{
+    display:inline-block;
+    margin-top:9px;
+    padding:4px 8px;
+    border-radius:7px;
+    background:#252b34;
+    color:var(--muted);
+    font-size:11px;
+    font-weight:bold;
+}
+
+.event-buttons{
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+}
+
+.event-buttons button{
+    margin:0;
+    padding:8px;
+    font-size:13px;
+}
+
+.empty{
+    text-align:center;
+    color:var(--muted);
+    padding:25px 10px;
+    line-height:1.5;
+}
+
+.small{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:8px;
+    line-height:1.4;
+}
+
+@media(max-width:560px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .logo{
+        font-size:30px;
+    }
+
+}
+</style>
 </head>
 
-<body style="background:#111;color:white;font-family:Arial;padding:30px">
+<body>
 
-<h1>Skoljess</h1>
+<div class="container">
 
-<p id="status">JavaScript testar...</p>
+<header>
+
+    <div class="logo">
+        JESSII KOLL
+    </div>
+
+    <div class="subtitle">
+        Skolinfo samlad på ett ställe
+    </div>
+
+</header>
+
+
+<!-- =========================
+     SKOLBREV
+========================= -->
+
+<div class="panel">
+
+    <div class="panel-title">
+        Klistra in skolbrev
+    </div>
+
+    <textarea
+        id="schoolLetter"
+        placeholder="Klistra in hela skolans meddelande här..."
+    ></textarea>
+
+    <button onclick="readLetter()">
+        LÄS BREVET
+    </button>
+
+    <div
+        id="letterMessage"
+        class="notice hidden"
+    ></div>
+
+</div>
+
+
+<!-- =========================
+     EGEN INFO
+========================= -->
+
+<div class="panel">
+
+    <div class="panel-title">
+        Lägg till egen information
+    </div>
+
+    <div class="grid">
+
+        <input
+            type="date"
+            id="customDate"
+        >
+
+        <input
+            type="time"
+            id="customTime"
+        >
+
+    </div>
+
+    <input
+        id="customTitle"
+        placeholder="Vad händer?"
+        style="margin-top:10px;"
+    >
+
+    <textarea
+        id="customInfo"
+        placeholder="Extra information (valfritt)"
+        style="min-height:100px;margin-top:10px;"
+    ></textarea>
+
+    <button onclick="addCustomEvent()">
+        LÄGG TILL
+    </button>
+
+</div>
+
+
+<!-- =========================
+     HÄNDELSER
+========================= -->
+
+<div class="panel">
+
+    <div class="panel-title">
+        Kommande
+    </div>
+
+    <div id="eventList"></div>
+
+    <button
+        class="secondary"
+        onclick="deleteEverything()"
+    >
+        RADERA ALL INFORMATION
+    </button>
+
+</div>
+
+</div>
+
 
 <script>
-document.getElementById("status").textContent =
-    "JAVASCRIPT FUNGERAR!";
-</script>
 
-</body>
-</html>
+const STORAGE_KEY = "jessii_koll_events_v2";
+
+let events = loadEvents();
+
+
+/* =========================================================
+   LAGRING
+========================================================= */
+
+function loadEvents(){
+
+    try{
+
+        const saved =
+            localStorage.getItem(STORAGE_KEY);
+
+        if(!saved){
+            return [];
+        }
+
+        return JSON.parse(saved);
+
+    }catch(error){
+
+        return [];
+
+    }
+
+}
+
+
+function saveEvents(){
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(events)
+    );
+
+}
+
+
+/* =========================================================
+   HJÄLP
+========================================================= */
+
+function pad(number){
+
+    return String(number).padStart(2,"0");
+
+}
+
+
+function escapeHTML(text){
+
+    return String(text || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function todayString(){
+
+    const d = new Date();
+
+    return (
+        d.getFullYear() +
+        "-" +
+        pad(d.getMonth()+1) +
+        "-" +
+        pad(d.getDate())
+    );
+
+}
+
+
+function weekdayName(date){
+
+    return new Intl.DateTimeFormat(
+        "sv-SE",
+        {
+            weekday:"long"
+        }
+    ).format(date);
+
+}
+
+
+function prettyDate(dateString){
+
+    const parts =
+        dateString.split("-").map(Number);
+
+    const date =
+        new Date(
+            parts[0],
+            parts[1]-1,
+            parts[2]
+        );
+
+    return new Intl.DateTimeFormat(
+        "sv-SE",
+        {
+            day:"numeric",
+            month:"long"
+        }
+    ).format(date);
+
+}
+
+
+/* =========================================================
+   MÅNADER
+========================================================= */
+
+const months = {
+
+    januari:1,
+    februari:2,
+    mars:3,
+    april:4,
+    maj:5,
+    juni:6,
+    juli:7,
+    augusti:8,
+    september:9,
+    oktober:10,
+    november:11,
+    december:12
+
+};
+
+
+/* =========================================================
+   SKAPA DATUM
+========================================================= */
+
+function makeDate(day,month,year){
+
+    day = Number(day);
+    month = Number(month);
+
+    let y =
+        year
+        ? Number(year)
+        : new Date().getFullYear();
+
+
+    let date =
+        new Date(
+            y,
+            month-1,
+            day
+        );
+
+
+    if(
+        !year &&
+        date <
+        new Date(
+            new Date().getFullYear(),
+            new Date().getMonth(),
+            new Date().getDate()
+        )
+    ){
+
+        y++;
+
+        date =
+            new Date(
+                y,
+                month-1,
+                day
+            );
+
+    }
+
+
+    if(
+        date.getFullYear() !== y ||
+        date.getMonth() !== month-1 ||
+        date.getDate() !== day
+    ){
+
+        return null;
+
+    }
+
+
+    return (
+        y +
+        "-" +
+        pad(month) +
+        "-" +
+        pad(day)
+    );
+
+}
+
+
+/* =========================================================
+   TID
+========================================================= */
+
+function normalizeTime(hour,minute){
+
+    return (
+        pad(Number(hour)) +
+        ":" +
+        pad(Number(minute))
+    );
+
+}
+
+
+function findTime(text){
+
+    const match =
+        text.match(
+            /\b(?:kl\.?\s*)?([01]?\d|2[0-3])\s*:\s*([0-5]\d)\b/i
+        );
+
+
+    if(!match){
+
+        return "";
+
+    }
+
+
+    return normalizeTime(
+        match[1],
+        match[2]
+    );
+
+}
+
+
+function findTimeRange(text){
+
+    const match =
+        text.match(
+            /\b(?:kl\.?\s*)?([01]?\d|2[0-3])\s*:\s*([0-5]\d)\s*[-–]\s*([01]?\d|2[0-3])\s*:\s*([0-5]\d)\b/i
+        );
+
+
+    if(!match){
+
+        return null;
+
+    }
+
+
+    return (
+        normalizeTime(
+            match[1],
+            match[2]
+        ) +
+        "-" +
+        normalizeTime(
+            match[3],
+            match[4]
+        )
+    );
+
+}
+
+
+/* =========================================================
+   DATUMSTRÄFFAR
+========================================================= */
+
+function findDates(text){
+
+    const results = [];
+
+    /*
+       18 augusti
+       24 september
+    */
+
+    const wordRegex =
+        /\b(\d{1,2})\s+(januari|februari|mars|april|maj|juni|juli|augusti|september|oktober|november|december)(?:\s+(20\d{2}))?\b/gi;
+
+
+    let match;
+
+
+    while(
+        (match = wordRegex.exec(text))
+    ){
+
+        const date =
+            makeDate(
+                match[1],
+                months[
+                    match[2].toLowerCase()
+                ],
+                match[3]
+            );
+
+
+        if(date){
+
+            results.push({
+                date:date,
+                index:match.index,
+                length:match[0].length,
+                raw:match[0]
+            });
+
+        }
+
+    }
+
+
+    /*
+       18/8
+       18/08/2026
+       24-9
+       24.9
+    */
+
+    const numberRegex =
+        /\b(\d{1,2})\s*[\/.\-]\s*(\d{1,2})(?:\s*[\/.\-]\s*(20\d{2}))?\b/g;
+
+
+    while(
+        (match = numberRegex.exec(text))
+    ){
+
+        const date =
+            makeDate(
+                match[1],
+                match[2],
+                match[3]
+            );
+
+
+        if(date){
+
+            results.push({
+                date:date,
+                index:match.index,
+                length:match[0].length,
+                raw:match[0]
+            });
+
+        }
+
+    }
+
+
+    /*
+       Sortera efter plats i brevet.
+    */
+
+    results.sort(
+        (a,b) =>
+            a.index - b.index
+    );
+
+
+    /*
+       Ta bort identiska träffar.
+    */
+
+    const unique = [];
+
+
+    results.forEach(
+        item => {
+
+            const exists =
+                unique.some(
+                    x =>
+                        x.index === item.index &&
+                        x.date === item.date
+                );
+
+
+            if(!exists){
+
+                unique.push(item);
+
+            }
+
+        }
+    );
+
+
+    return unique;
+
+}
+
+
+/* =========================================================
+   HÄMTA MENING
+========================================================= */
+
+function getSentence(text,index){
+
+    let start =
+        text.lastIndexOf(
+            ".",
+            index
+        );
+
+
+    let end =
+        text.indexOf(
+            ".",
+            index
+        );
+
+
+    if(start === -1){
+        start = 0;
+    }else{
+        start++;
+    }
+
+
+    if(end === -1){
+        end = text.length;
+    }
+
+
+    return text
+        .substring(
+            start,
+            end
+        )
+        .replace(/\s+/g," ")
+        .trim();
+
+}
+
+
+/* =========================================================
+   RENGÖR RUBRIK
+========================================================= */
+
+function cleanTitle(sentence,dateRaw){
+
+    let title = sentence;
+
+
+    /*
+       Ta bort veckodag.
+    */
+
+    title =
+        title.replace(
+            /\b(måndag|tisdag|onsdag|torsdag|fredag|lördag|söndag)\b/gi,
+            ""
+        );
+
+
+    /*
+       Ta bort datumet.
+    */
+
+    if(dateRaw){
+
+        title =
+            title.replace(
+                dateRaw,
+                ""
+            );
+
+    }
+
+
+    /*
+       Ta bort tid.
+    */
+
+    title =
+        title.replace(
+            /\b(?:kl\.?\s*)?\d{1,2}\s*:\s*\d{2}(?:\s*[-–]\s*\d{1,2}\s*:\s*\d{2})?/gi,
+            ""
+        );
+
+
+    /*
+       Ta bort vanliga inledningar.
+    */
+
+    title =
+        title.replace(
+            /^(?:är det|kommer|den|på|och|att)\s+/i,
+            ""
+        );
+
+
+    title =
+        title
+            .replace(
+                /^[,;:\-–\s]+/,
+                ""
+            )
+            .replace(
+                /[,;:\-–\s]+$/,
+                ""
+            )
+            .trim();
+
+
+    if(!title){
+
+        title =
+            "Skolinformation";
+
+    }
+
+
+    /*
+       Inte gigantiska rubriker.
+    */
+
+    if(title.length > 100){
+
+        title =
+            title
+                .substring(0,100)
+                .trim() +
+            "...";
+
+    }
+
+
+    return title;
+
+}
+
+
+/* =========================================================
+   LÄGG TILL
+========================================================= */
+
+function addEvent(
+    date,
+    time,
+    title,
+    info,
+    source
+){
+
+    if(!date || !title){
+
+        return;
+
+    }
+
+
+    title =
+        title.trim();
+
+    info =
+        (info || "").trim();
+
+    time =
+        time || "";
+
+
+    /*
+       Samma datum + samma tid + samma rubrik
+       = samma händelse.
+    */
+
+    const existing =
+        events.find(
+            e =>
+                e.date === date &&
+                e.time === time &&
+                e.title.toLowerCase() ===
+                title.toLowerCase()
+        );
+
+
+    if(existing){
+
+        if(
+            info &&
+            !existing.info.includes(info)
+        ){
+
+            existing.info =
+                existing.info
+                ? existing.info +
+                  "\n" +
+                  info
+                : info;
+
+        }
+
+        return;
+
+    }
+
+
+    events.push({
+
+        id:
+            Date.now() +
+            Math.random(),
+
+        date:date,
+
+        time:time,
+
+        title:title,
+
+        info:info,
+
+        source:source || "EGEN"
+
+    });
+
+}
+
+
+/* =========================================================
+   LÄS BREV
+========================================================= */
+
+function readLetter(){
+
+    const text =
+        document
+            .getElementById(
+                "schoolLetter"
+            )
+            .value
+            .trim();
+
+
+    const message =
+        document.getElementById(
+            "letterMessage"
+        );
+
+
+    if(!text){
+
+        message.textContent =
+            "Klistra först in ett skolbrev.";
+
+        message.classList.remove(
+            "hidden"
+        );
+
+        return;
+
+    }
+
+
+    const dates =
+        findDates(text);
+
+
+    if(dates.length === 0){
+
+        message.textContent =
+            "Jag hittade inga datum i brevet.";
+
+        message.classList.remove(
+            "hidden"
+        );
+
+        return;
+
+    }
+
+
+    let added = 0;
+
+
+    dates.forEach(
+        (item,index) => {
+
+            /*
+               Ta meningen där datumet finns.
+            */
+
+            let sentence =
+                getSentence(
+                    text,
+                    item.index
+                );
+
+
+            /*
+               Om meningen är väldigt kort,
+               titta lite bredare.
+            */
+
+            if(
+                sentence.length < 5 &&
+                index < dates.length-1
+            ){
+
+                sentence =
+                    text.substring(
+                        item.index,
+                        dates[index+1].index
+                    )
+                    .replace(/\s+/g," ")
+                    .trim();
+
+            }
+
+
+            const range =
+                findTimeRange(
+                    sentence
+                );
+
+
+            const singleTime =
+                findTime(
+                    sentence
+                );
+
+
+            const time =
+                range ||
+                singleTime ||
+                "";
+
+
+            const title =
+                cleanTitle(
+                    sentence,
+                    item.raw
+                );
+
+
+            /*
+               Försök hitta lite extra information
+               efter rubriken.
+            */
+
+            let info = "";
+
+
+            /*
+               Om meningen innehåller "mer information"
+               kan resten få följa med som info.
+            */
+
+            const infoMatch =
+                sentence.match(
+                    /(?:mer information|information kommer|information finns)(.*)/i
+                );
+
+
+            if(infoMatch){
+
+                info =
+                    infoMatch[0].trim();
+
+            }
+
+
+            addEvent(
+                item.date,
+                time,
+                title,
+                info,
+                "SKOLBREV"
+            );
+
+
+            added++;
+
+        }
+    );
+
+
+    saveEvents();
+
+    render();
+
+
+    message.innerHTML =
+        "<strong>Klart!</strong><br>" +
+        "Jag hittade " +
+        added +
+        " datum." +
+        "<br><br>" +
+        "Datum som är samma dag samlas automatiskt på samma kort.";
+
+    message.classList.remove(
+        "hidden"
+    );
+
+}
+
+
+/* =========================================================
+   EGEN INFO
+========================================================= */
+
+function addCustomEvent(){
+
+    const date =
+        document
+            .getElementById(
+                "customDate"
+            )
+            .value;
+
+
+    const time =
+        document
+            .getElementById(
+                "customTime"
+            )
+            .value;
+
+
+    const title =
+        document
+            .getElementById(
+                "customTitle"
+            )
+            .value
+            .trim();
+
+
+    const info =
+        document
+            .getElementById(
+                "customInfo"
+            )
+            .value
+            .trim();
+
+
+    if(!date){
+
+        alert(
+            "Välj datum."
+        );
+
+        return;
+
+    }
+
+
+    if(!title){
+
+        alert(
+            "Skriv vad informationen gäller."
+        );
+
+        return;
+
+    }
+
+
+    addEvent(
+        date,
+        time,
+        title,
+        info,
+        "EGEN"
+    );
+
+
+    saveEvents();
+
+    render();
+
+
+    document
+        .getElementById(
+            "customTitle"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "customInfo"
+        )
+        .value = "";
+
+}
+
+
+/* =========================================================
+   TA BORT
+========================================================= */
+
+function deleteEvent(id){
+
+    events =
+        events.filter(
+            event =>
+                event.id !== id
+        );
+
+
+    saveEvents();
+
+    render();
+
+}
+
+
+function deleteEverything(){
+
+    if(
+        !confirm(
+            "Vill du verkligen radera ALL information?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    events = [];
+
+    saveEvents();
+
+    render();
+
+}
+
+
+/* =========================================================
+   VISA
+========================================================= */
+
+function render(){
+
+    const list =
+        document.getElementById(
+            "eventList"
+        );
+
+
+    if(events.length === 0){
+
+        list.innerHTML = `
+            <div class="empty">
+                Inga händelser ännu.<br><br>
+                Klistra in ett skolbrev eller
+                lägg till egen information.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    /*
+       Sortera datum.
+    */
+
+    events.sort(
+        (a,b) => {
+
+   
